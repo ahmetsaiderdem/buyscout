@@ -89,6 +89,20 @@ aside{width:264px;min-width:230px;background:var(--bg2);border-right:1px solid v
 .sidebar-actions{padding:9px 10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;}
 .sa-btn{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .18s;}
 .sa-btn:hover{border-color:var(--accent);color:var(--accent);}
+.add-site-form{padding:9px 10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.add-site-form.hidden{display:none;}
+.add-site-input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 9px;font-size:11px;font-family:inherit;color:var(--text);outline:none;transition:border-color .18s;}
+.add-site-input:focus{border-color:var(--accent);}
+.add-site-input::placeholder{color:var(--text3);}
+.add-site-row{display:flex;gap:6px;}
+.add-site-submit{flex:1;background:var(--accent);border:none;color:#fff;border-radius:8px;padding:6px;font-size:11px;font-family:inherit;cursor:pointer;font-weight:600;transition:opacity .18s;}
+.add-site-submit:hover{opacity:.85;}
+.add-site-cancel{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 10px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .18s;}
+.add-site-cancel:hover{border-color:var(--red);color:var(--red);}
+.site-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px;transition:color .18s;line-height:1;}
+.site-del:hover{color:var(--red);}
+.open-add-btn{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .18s;}
+.open-add-btn:hover{border-color:var(--accent);color:var(--accent);}
 
 /* MAIN */
 main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative;}
@@ -141,7 +155,7 @@ main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--
 .p-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:38px;background:var(--bg3);}
 .p-card-body{padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:3px;}
 .p-card-source{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
-.p-card-title{font-size:12px;font-weight:600;line-height:1.42;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px;}
+.p-card-title{font-size:12px;font-weight:600;line-height:1.42;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px;}
 .p-card-price{font-size:16px;font-weight:800;color:var(--green);margin-top:6px;}
 .p-card-price.no-price{font-size:11px;color:var(--text3);font-weight:400;}
 .p-card-btn{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto;padding-top:9px;padding-bottom:9px;background:var(--accent);color:#fff;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.3px;transition:opacity .18s;margin-top:8px;}
@@ -245,6 +259,16 @@ main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--
     <div class="sidebar-actions">
       <button class="sa-btn" onclick="selectAllSites()">Tumunu Sec</button>
       <button class="sa-btn" onclick="deselectAllSites()">Hepsini Kaldir</button>
+      <button class="open-add-btn" onclick="toggleAddForm()" title="Yeni site ekle">+</button>
+    </div>
+    <div class="add-site-form hidden" id="addSiteForm">
+      <input class="add-site-input" id="addSiteName" placeholder="Site adı (örn: Zara)" maxlength="30">
+      <input class="add-site-input" id="addSiteUrl" placeholder="Arama URL'si: https://site.com/search?q={q}">
+      <div class="add-site-row">
+        <button class="add-site-submit" onclick="submitAddSite()">Ekle</button>
+        <button class="add-site-cancel" onclick="toggleAddForm()">İptal</button>
+      </div>
+      <div style="font-size:10px;color:var(--text3);line-height:1.5">{q} yerine arama terimi otomatik yazılır</div>
     </div>
   </aside>
   <main id="mainArea">
@@ -346,6 +370,46 @@ var isSending = false;
 var apiOnline = false;
 
 // ─── PERSISTENCE ─────────────────────────────────────────
+// ─── CUSTOM SITE EKLEME ──────────────────────────────────
+function toggleAddForm(){
+  var f=document.getElementById('addSiteForm');
+  f.classList.toggle('hidden');
+  if(!f.classList.contains('hidden'))document.getElementById('addSiteName').focus();
+}
+function submitAddSite(){
+  var name=document.getElementById('addSiteName').value.trim();
+  var url=document.getElementById('addSiteUrl').value.trim();
+  if(!name){alert('Site adı girin.');return;}
+  if(!url||!url.includes('{q}')){alert("URL'de {q} olmalı. Örn: https://site.com/search?q={q}");return;}
+  var id='custom_'+Date.now();
+  var newSite={id:id,name:name,em:'🔗',cat:'genel',desc:'Özel site',url:url,on:true,custom:true};
+  sites.push(newSite);
+  saveSites();
+  saveCustomSites();
+  renderSidebar();
+  document.getElementById('addSiteName').value='';
+  document.getElementById('addSiteUrl').value='';
+  toggleAddForm();
+  addMsg('bot','<b>'+esc(name)+'</b> eklendi! Artık aramalarında kullanılacak.');
+}
+function deleteSite(id,e){
+  e.stopPropagation();
+  sites=sites.filter(function(s){return s.id!==id;});
+  saveSites();
+  saveCustomSites();
+  renderSidebar();
+}
+function saveCustomSites(){
+  var custom=sites.filter(function(s){return s.custom;});
+  localStorage.setItem('bs_custom_sites',JSON.stringify(custom));
+}
+function loadCustomSites(){
+  try{
+    var saved=JSON.parse(localStorage.getItem('bs_custom_sites')||'[]');
+    saved.forEach(function(s){if(!sites.find(function(x){return x.id===s.id;}))sites.push(s);});
+  }catch(e){}
+}
+
 function loadSites(){
   try{
     var saved=JSON.parse(localStorage.getItem('bs_sites')||'null');
@@ -381,7 +445,8 @@ function renderSidebar(){
   (activeCat==='hepsi'?sites:sites.filter(function(s){return s.cat===activeCat;})).forEach(function(s){
     var el=document.createElement('div');
     el.className='site-row'+(s.on?' on':'');
-    el.innerHTML='<div class="site-check">'+(s.on?'&#10003;':'')+'</div><div class="site-em">'+s.em+'</div><div class="site-info"><div class="site-nm">'+s.name+'</div><div class="site-desc">'+s.desc+'</div></div>';
+    var delBtn=s.custom?'<button class="site-del" onclick="deleteSite(\''+s.id+'\',event)" title="Kaldır">✕</button>':'';
+    el.innerHTML='<div class="site-check">'+(s.on?'&#10003;':'')+'</div><div class="site-em">'+s.em+'</div><div class="site-info"><div class="site-nm">'+s.name+'</div><div class="site-desc">'+s.desc+'</div></div>'+delBtn;
     el.onclick=function(){s.on=!s.on;saveSites();renderSidebar();};
     le.appendChild(el);
   });
@@ -696,6 +761,7 @@ function toggleTheme(){document.body.classList.toggle('light');localStorage.setI
 // ─── INIT ─────────────────────────────────────────────────
 (function(){
   if(localStorage.getItem('bs_theme')==='light')document.body.classList.add('light');
+  loadCustomSites();
   renderSidebar();renderWelcome();
   checkAPI();
   setTimeout(function(){
