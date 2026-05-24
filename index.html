@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuyScout — Akilli Alisveris Asistani</title>
+<style>
+:root{
+  --bg:      #13101f;
+  --bg2:     #1b1730;
+  --bg3:     #241f3d;
+  --bg4:     #2e294e;
+  --border:  #3c3560;
+  --accent:  #5B3CC4;
+  --accentH: #4a2fa8;
+  --green:   #7BBFA1;
+  --red:     #E88C6B;
+  --yellow:  #F3B37A;
+  --purple:  #9d86e8;
+  --text:    #F0EDF8;
+  --text2:   #9b94c0;
+  --text3:   #635d8a;
+  --radius:  14px;
+  --a1: rgba(91,60,196,.07);
+  --a2: rgba(91,60,196,.14);
+  --a3: rgba(91,60,196,.28);
+}
+body.light{
+  --bg:      #F4F1EC;
+  --bg2:     #FFFFFF;
+  --bg3:     #EBE7E0;
+  --bg4:     #E2DDD5;
+  --border:  #D4CECC;
+  --accent:  #245D5A;
+  --accentH: #1a4846;
+  --green:   #245D5A;
+  --red:     #D9898B;
+  --yellow:  #D9B26F;
+  --purple:  #D9898B;
+  --text:    #233036;
+  --text2:   #5a7272;
+  --text3:   #8a9e9e;
+  --a1: rgba(36,93,90,.07);
+  --a2: rgba(36,93,90,.14);
+  --a3: rgba(36,93,90,.28);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* HEADER */
+header{display:flex;align-items:center;gap:16px;padding:12px 22px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;z-index:50;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-logo{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.brand-name{font-size:20px;font-weight:600;letter-spacing:.1px;}
+.brand-name em{color:var(--accent);font-style:normal;font-weight:700;}
+.brand-tag{font-size:12px;color:var(--text2);}
+.hdr-spacer{flex:1;}
+.hdr-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:9px;padding:6px 13px;cursor:pointer;font-size:12px;font-family:inherit;transition:all .18s;}
+.hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
+.api-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;}
+.api-dot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:background .3s;}
+.api-dot.ok{background:var(--green);}
+.api-dot.err{background:var(--red);}
+
+/* LAYOUT */
+.layout{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+aside{width:264px;min-width:230px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-top{padding:14px 12px 10px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.s-label{font-size:9.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:9px;}
+.cat-tabs{display:flex;gap:5px;flex-wrap:wrap;}
+.cat-tab{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 9px;font-size:11px;cursor:pointer;transition:all .18s;user-select:none;color:var(--text2);}
+.cat-tab:hover,.cat-tab.active{background:var(--a2);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.sidebar-body{flex:1;overflow-y:auto;padding:9px 10px 12px;display:flex;flex-direction:column;gap:5px;}
+.site-row{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:all .18s;user-select:none;}
+.site-row:hover{background:var(--bg3);border-color:var(--border);}
+.site-row.on{background:var(--a1);border-color:var(--a3);}
+.site-check{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .18s;flex-shrink:0;}
+.site-row.on .site-check{background:var(--accent);border-color:var(--accent);color:#fff;}
+.site-em{font-size:16px;line-height:1;}
+.site-info{flex:1;min-width:0;}
+.site-nm{font-size:13px;font-weight:600;}
+.site-desc{font-size:10px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-hint{padding:7px 12px 5px;font-size:10px;color:var(--text3);border-top:1px solid var(--border);line-height:1.5;}
+.sidebar-actions{padding:9px 10px;border-top:1px solid var(--border);display:flex;gap:6px;flex-shrink:0;}
+.sa-btn{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px;font-size:11px;font-family:inherit;cursor:pointer;transition:all .18s;}
+.sa-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* MAIN */
+main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);position:relative;}
+.chat-scroll{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:18px;}
+
+/* DRAG OVERLAY */
+.drag-overlay{display:none;position:absolute;inset:0;z-index:200;background:var(--a2);border:2px dashed var(--accent);border-radius:16px;align-items:center;justify-content:center;flex-direction:column;gap:12px;font-size:22px;color:var(--accent);font-weight:700;backdrop-filter:blur(4px);pointer-events:none;}
+.drag-overlay.show{display:flex;}
+
+/* WELCOME */
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:36px 20px;animation:fadeUp .4s ease;}
+.welcome-icon{font-size:56px;line-height:1;}
+.welcome h1{font-size:28px;font-weight:700;letter-spacing:-.3px;}
+.welcome h1 em{color:var(--accent);font-style:normal;}
+.welcome p{font-size:14px;color:var(--text2);line-height:1.75;max-width:460px;}
+.welcome-cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+.wcat{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 15px;font-size:12px;cursor:pointer;transition:all .18s;}
+.wcat:hover{border-color:var(--accent);background:var(--a1);color:var(--accent);transform:translateY(-1px);}
+
+/* MESSAGES */
+.msg{display:flex;gap:11px;animation:fadeUp .28s ease;}
+.msg.user{flex-direction:row-reverse;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.av{width:33px;height:33px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:3px;}
+.av.bot{background:var(--accent);}
+.av.user{background:var(--bg3);border:1px solid var(--border);}
+.bbl{max-width:74%;padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.65;}
+.bbl.bot{background:var(--bg3);border:1px solid var(--border);border-top-left-radius:4px;}
+.bbl.user{background:var(--accent);color:#fff;border-top-right-radius:4px;}
+.bbl b{color:var(--accent);}.bbl.user b{color:#d0caff;}
+.bbl-img{max-width:220px;max-height:180px;border-radius:10px;object-fit:cover;display:block;margin-bottom:8px;border:2px solid rgba(255,255,255,.2);}
+.bbl.wide{max-width:92%;}
+
+/* TYPING */
+.typing{display:flex;gap:5px;padding:4px 0;}
+.typing span{width:8px;height:8px;background:var(--text2);border-radius:50%;animation:blink 1.2s ease infinite;}
+.typing span:nth-child(2){animation-delay:.2s;}
+.typing span:nth-child(3){animation-delay:.4s;}
+@keyframes blink{0%,80%,100%{transform:scale(.7);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+/* ── REAL PRODUCT CARDS ── */
+.product-section{margin-top:10px;}
+.result-label{font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:11px;max-width:900px;}
+.p-card{background:var(--bg4);border:1px solid var(--border);border-radius:13px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s;text-decoration:none;color:inherit;}
+.p-card:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 6px 24px rgba(0,0,0,.2);}
+.p-card-img-wrap{width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--bg3);position:relative;}
+.p-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s;}
+.p-card:hover .p-card-img{transform:scale(1.04);}
+.p-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:38px;background:var(--bg3);}
+.p-card-body{padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:3px;}
+.p-card-source{font-size:10px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
+.p-card-title{font-size:12px;font-weight:600;line-height:1.42;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px;}
+.p-card-price{font-size:16px;font-weight:800;color:var(--green);margin-top:6px;}
+.p-card-price.no-price{font-size:11px;color:var(--text3);font-weight:400;}
+.p-card-btn{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto;padding-top:9px;padding-bottom:9px;background:var(--accent);color:#fff;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.3px;transition:opacity .18s;margin-top:8px;}
+.p-card:hover .p-card-btn{opacity:.88;}
+
+/* ── SKELETON LOADING ── */
+.skeleton-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:11px;max-width:900px;margin-top:10px;}
+.sk-card{background:var(--bg4);border:1px solid var(--border);border-radius:13px;overflow:hidden;}
+.sk-img{width:100%;aspect-ratio:1/1;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.sk-body{padding:10px 11px;display:flex;flex-direction:column;gap:7px;}
+.sk-line{height:11px;border-radius:6px;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.sk-line.w80{width:80%;}
+.sk-line.w55{width:55%;}
+.sk-line.w35{width:35%;height:15px;margin-top:3px;}
+.sk-line.btn{width:100%;height:32px;border-radius:8px;margin-top:6px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* OLD LINK CARDS (fallback) */
+.result-wrap{margin-top:10px;}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px;max-width:840px;}
+.r-card{background:var(--bg4);border:1px solid var(--border);border-radius:12px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s;cursor:pointer;}
+.r-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 4px 20px rgba(0,0,0,.15);}
+.r-card-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.r-card-head .em{font-size:16px;}.r-card-head .nm{font-size:12px;font-weight:700;}
+.r-card-head .badge{margin-left:auto;font-size:10px;font-weight:600;background:var(--a2);color:var(--accent);border-radius:4px;padding:2px 7px;letter-spacing:.4px;}
+.r-card-body{padding:11px;flex:1;display:flex;flex-direction:column;gap:5px;}
+.r-card-q{font-size:10px;color:var(--text2);}
+.r-card-title{font-size:12px;font-weight:600;line-height:1.4;}
+.r-card-btn{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:auto;padding:7px;background:var(--a1);border:1px solid var(--a3);border-radius:7px;color:var(--accent);font-size:11px;font-weight:600;letter-spacing:.2px;transition:background .18s;}
+.r-card:hover .r-card-btn{background:var(--a2);}
+.r-card.visual{background:var(--a1);}.r-card.visual .r-card-head{background:var(--a2);}
+.r-card.visual .badge{background:var(--a2);color:var(--accent);}
+.r-card.general{background:var(--bg3);}.r-card.general .r-card-head{background:var(--bg4);}
+.r-card.general .badge{background:var(--a1);color:var(--accent);}
+.open-all{display:inline-flex;align-items:center;gap:8px;margin-top:13px;padding:10px 22px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .18s,transform .18s;letter-spacing:.2px;}
+.open-all:hover{opacity:.88;transform:translateY(-2px);}
+.ftag{display:inline-flex;align-items:center;background:var(--a1);border:1px solid var(--a3);color:var(--accent);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;margin-right:6px;margin-bottom:10px;}
+.vtag{display:inline-flex;align-items:center;background:var(--a1);border:1px solid var(--a3);color:var(--accent);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;margin-right:6px;margin-bottom:10px;}
+.vsearch-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--a1);border:1px solid var(--a3);border-radius:10px;margin-bottom:12px;font-size:13px;}
+.vsearch-header .icon{font-size:22px;}
+.no-results{padding:18px;color:var(--text2);font-size:13px;text-align:center;}
+
+/* INPUT BAR */
+.input-bar{padding:11px 22px 16px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0;}
+.voice-bar{display:none;align-items:center;gap:10px;padding:7px 13px;background:rgba(245,87,108,.1);border:1px solid rgba(245,87,108,.3);border-radius:9px;font-size:12px;color:var(--red);margin-bottom:9px;}
+.voice-bar.show{display:flex;}
+.vwave{display:flex;gap:3px;align-items:center;}
+.vwave span{width:3px;background:var(--red);border-radius:2px;animation:vw 1s ease infinite;}
+.vwave span:nth-child(1){height:6px;}.vwave span:nth-child(2){height:14px;animation-delay:.1s;}.vwave span:nth-child(3){height:10px;animation-delay:.2s;}.vwave span:nth-child(4){height:18px;animation-delay:.1s;}.vwave span:nth-child(5){height:7px;animation-delay:.3s;}
+@keyframes vw{0%,100%{transform:scaleY(1);}50%{transform:scaleY(.35);}}
+.img-preview-strip{display:none;align-items:center;gap:10px;padding:8px 12px;background:var(--a1);border:1px solid var(--a3);border-radius:10px;margin-bottom:9px;}
+.img-preview-strip.show{display:flex;}
+.img-preview-strip img{width:50px;height:50px;object-fit:cover;border-radius:8px;border:1px solid var(--a3);}
+.img-preview-strip .img-info{flex:1;font-size:12px;color:var(--text2);line-height:1.5;}
+.img-preview-strip .img-info b{color:var(--accent);font-size:13px;}
+.img-preview-strip .clear-img{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:4px;border-radius:6px;transition:color .18s;}
+.img-preview-strip .clear-img:hover{color:var(--red);}
+.input-row{display:flex;gap:9px;align-items:flex-end;}
+.input-wrap{flex:1;display:flex;align-items:flex-end;gap:7px;background:var(--bg3);border:1.5px solid var(--border);border-radius:13px;padding:9px 12px;transition:border-color .18s;}
+.input-wrap:focus-within{border-color:var(--accent);}
+.input-wrap.has-img{border-color:var(--accent);}
+#chatInput{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:14px;font-family:inherit;resize:none;max-height:105px;line-height:1.55;}
+#chatInput::placeholder{color:var(--text2);}
+.attach-btn{width:34px;height:34px;border-radius:9px;background:var(--a1);border:1.5px solid var(--a3);color:var(--accent);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .18s;}
+.attach-btn:hover{background:var(--a2);border-color:var(--accent);}
+.mic-btn{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);color:var(--text2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .18s;}
+.mic-btn:hover{border-color:var(--red);color:var(--red);}
+.mic-btn.on{background:rgba(245,87,108,.15);border-color:var(--red);color:var(--red);animation:mpulse 1.2s ease infinite;}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(245,87,108,.4);}50%{box-shadow:0 0 0 8px rgba(245,87,108,0);}}
+.send-btn{width:44px;height:44px;border-radius:10px;background:var(--accent);color:#fff;border:none;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:opacity .18s,transform .18s;}
+.send-btn:hover{opacity:.88;transform:scale(1.06);}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+.chip{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:4px 11px;font-size:11px;color:var(--text2);cursor:pointer;transition:all .18s;user-select:none;}
+.chip:hover{border-color:var(--accent);color:var(--accent);background:var(--a1);}
+#fileInput{display:none;}
+@media(max-width:680px){aside{display:none;}.chat-scroll{padding:14px;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-logo"><svg width="22" height="22" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="18" cy="18" r="15" stroke="rgba(255,255,255,.9)" stroke-width="2"/><circle cx="18" cy="18" r="6.5" stroke="rgba(255,255,255,.45)" stroke-width="1.4"/><line x1="18" y1="3" x2="18" y2="11.5" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="24.5" x2="18" y2="33" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="18" x2="11.5" y2="18" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/><line x1="24.5" y1="18" x2="33" y2="18" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="18" r="2.4" fill="white"/></svg></div>
+    <div class="brand-name">Buy<em>Scout</em></div>
+  </div>
+  <span class="brand-tag">Akilli Alisveris Asistani</span>
+  <div class="hdr-spacer"></div>
+  <div class="api-status" id="apiStatus">
+    <div class="api-dot" id="apiDot"></div>
+    <span id="apiLabel">API kontrol ediliyor...</span>
+  </div>
+  <button class="hdr-btn" onclick="toggleTheme()">&#x1F313; Tema</button>
+</header>
+<div class="layout">
+  <aside>
+    <div class="sidebar-top">
+      <div class="s-label">Kategoriye Gore Filtrele</div>
+      <div class="cat-tabs" id="catTabs"></div>
+    </div>
+    <div class="sidebar-body" id="siteList"></div>
+    <div class="sidebar-hint">
+      Chat'e yaz: "Trendyol ekle" - "Vatan kaldir" - "Tum siteleri sec"<br>
+      Gorsel at veya yapistir (Ctrl+V) - AI ile taniyor
+    </div>
+    <div class="sidebar-actions">
+      <button class="sa-btn" onclick="selectAllSites()">Tumunu Sec</button>
+      <button class="sa-btn" onclick="deselectAllSites()">Hepsini Kaldir</button>
+    </div>
+  </aside>
+  <main id="mainArea">
+    <div class="drag-overlay" id="dragOverlay">
+      <div>&#x1F5BC;</div>
+      <div>Gorseli buraya birak</div>
+      <div style="font-size:14px;font-weight:400;color:var(--text2)">BuyScout AI ile taniyip benzer urunleri arayacak</div>
+    </div>
+    <div class="chat-scroll" id="chatScroll">
+      <div class="welcome" id="welcomeBox">
+        <div class="welcome-icon">&#x1F6CD;</div>
+        <h1>Merhaba! Ben <em>BuyScout</em>.</h1>
+        <p>Teknoloji, kiyafet, mobilya, aksesuar — her seyi en iyi fiyata bulmani saglarim.<br>
+        Yazmak, soylemek ya da <b>fotograf atmak</b> yeterli!</p>
+        <div class="welcome-cats" id="welcomeCats"></div>
+        <p style="font-size:11px;color:var(--text3)">Asagidan bir ornek sec veya kendi aramanı yap</p>
+      </div>
+    </div>
+    <div class="input-bar">
+      <div class="voice-bar" id="voiceBar">
+        <div class="vwave"><span></span><span></span><span></span><span></span><span></span></div>
+        Dinliyorum... konusmayi bitirince otomatik arayacagim.
+        <span style="margin-left:auto;cursor:pointer" onclick="stopVoice()">X Iptal</span>
+      </div>
+      <div class="img-preview-strip" id="imgPreviewStrip">
+        <img id="imgThumb" src="" alt="Onizleme" />
+        <div class="img-info">
+          <b>Gorsel eklendi</b><br>
+          Mesaj yaz veya direk gonder — AI ile taniyip benzer urunleri bulacagim
+        </div>
+        <button class="clear-img" onclick="clearImage()">X</button>
+      </div>
+      <div class="input-row">
+        <div class="input-wrap" id="inputWrap">
+          <button class="attach-btn" onclick="triggerFile()" title="Gorsel ekle">&#x1F4CE;</button>
+          <textarea id="chatInput" rows="1"
+            placeholder="Ne ariyorsun? Yaz, soyle veya fotograf at..."
+            onkeydown="onKey(event)" oninput="resizeTA(this)"></textarea>
+          <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Sesli komut">&#x1F3A4;</button>
+        </div>
+        <button class="send-btn" id="sendBtn" onclick="send()">&#x27A4;</button>
+      </div>
+      <div class="chips" id="chipRow"></div>
+    </div>
+  </main>
+</div>
+<input type="file" id="fileInput" accept="image/*" onchange="onFileSelect(event)">
+<script>
+
+// ─── CONFIG ──────────────────────────────────────────────
+// Railway deploy sonrasi buraya Railway URL'ini girin:
+// Ornek: var API_URL = 'https://buyscout-production.up.railway.app';
+var API_URL = 'https://web-production-72b76.up.railway.app';
+
+// ─── SITE DATABASE ───────────────────────────────────────
+var SITE_DB = [
+  {id:'trendyol',  name:'Trendyol',    em:'\u{1F7E0}',cat:'genel',      desc:'En genis urun yelpazesi',     url:'https://www.trendyol.com/sr?q={q}',                         on:true },
+  {id:'hepsi',     name:'Hepsiburada', em:'\u{1F7E1}',cat:'genel',      desc:'Genis secim, hizli kargo',    url:'https://www.hepsiburada.com/ara?q={q}',                     on:true },
+  {id:'amazon',    name:'Amazon TR',   em:'\u{1F4E6}',cat:'genel',      desc:'Amazon guvencesi',            url:'https://www.amazon.com.tr/s?k={q}',                         on:true },
+  {id:'n11',       name:'N11',         em:'\u{1F535}',cat:'genel',      desc:'Cok satici pazar yeri',       url:'https://www.n11.com/arama?q={q}',                           on:false},
+  {id:'mediamarkt',name:'MediaMarkt',  em:'\u{1F534}',cat:'teknoloji',  desc:'Elektronik uzmani',           url:'https://www.mediamarkt.com.tr/tr/search.html?query={q}',    on:true },
+  {id:'vatan',     name:'Vatan',       em:'\u{1F7E2}',cat:'teknoloji',  desc:'Bilgisayar & elektronik',     url:'https://www.vatanbilgisayar.com/arama/?q={q}',              on:false},
+  {id:'teknosa',   name:'Teknosa',     em:'\u{1F7E3}',cat:'teknoloji',  desc:'Elektronik & beyaz esya',     url:'https://www.teknosa.com/search?s={q}',                      on:false},
+  {id:'lcw',       name:'LC Waikiki',  em:'\u{1F455}',cat:'kiyafet',    desc:'Uygun fiyatli moda',          url:'https://www.lcwaikiki.com/tr-TR/TR/search?q={q}',           on:false},
+  {id:'defacto',   name:'DeFacto',     em:'\u{1F457}',cat:'kiyafet',    desc:'Gunluk & sik giyim',          url:'https://www.defacto.com.tr/arama?q={q}',                    on:false},
+  {id:'koton',     name:'Koton',       em:'\u{1F458}',cat:'kiyafet',    desc:'Kadin & erkek moda',          url:'https://www.koton.com/tr/catalogsearch/result/?q={q}',     on:false},
+  {id:'mavi',      name:'Mavi',        em:'\u{1FA7A}',cat:'kiyafet',    desc:'Denim & casual',              url:'https://www.mavi.com/search?q={q}',                         on:false},
+  {id:'hm',        name:'H&M',         em:'\u{1F454}',cat:'kiyafet',    desc:'Isvec tasarimi moda',         url:'https://www2.hm.com/tr_tr/search-results.html?q={q}',      on:false},
+  {id:'zara',      name:'Zara',        em:'\u{1FAA1}',cat:'kiyafet',    desc:'Premium moda',                url:'https://www.zara.com/tr/tr/search?searchTerm={q}',          on:false},
+  {id:'ikea',      name:'IKEA',        em:'\u{1F6CB}',cat:'mobilya',    desc:'Iskandinavya tasarimi mobilya',url:'https://www.ikea.com/tr/tr/search/?q={q}',                on:false},
+  {id:'karaca',    name:'Karaca',      em:'\u{1F373}',cat:'mobilya',    desc:'Ev tekstili & mutfak',        url:'https://www.karaca.com/search?q={q}',                       on:false},
+  {id:'morhipo',   name:'Morhipo',     em:'\u{1F3E0}',cat:'mobilya',    desc:'Ev & yasam indirimleri',      url:'https://www.morhipo.com/search?q={q}',                      on:false},
+  {id:'akakce',    name:'Akakce',      em:'⚖️',cat:'karsilastir',desc:'Fiyat karsilastirma',  url:'https://www.akakce.com/arama/?q={q}',                       on:true },
+  {id:'cimri',     name:'Cimri',       em:'\u{1F4A1}',cat:'karsilastir',desc:'En ucuz fiyat bulucu',        url:'https://www.cimri.com/arama?q=',                         on:false},
+];
+var CATS=[
+  {id:'hepsi',label:'Tumu'},{id:'genel',label:'Genel'},
+  {id:'teknoloji',label:'Teknoloji'},{id:'kiyafet',label:'Kiyafet'},
+  {id:'mobilya',label:'Mobilya & Ev'},{id:'karsilastir',label:'Karsilastir'},
+];
+var EXAMPLES=[
+  {em:'\u{1F4BE}',label:'16GB DDR5 RAM',         q:'16GB DDR5 RAM'},
+  {em:'\u{1F45F}',label:'Spor ayakkabi',           q:'beyaz spor ayakkabi erkek'},
+  {em:'\u{1F6CB}',label:'2 kisilik kanepe',        q:'2 kisilik kanepe gri'},
+  {em:'\u{1F4F1}',label:'iPhone 15 Pro',           q:'iPhone 15 Pro 256GB'},
+  {em:'\u{1F457}',label:'Yazlik elbise',            q:'yazlik cicekli elbise'},
+  {em:'⌨️', label:'Mekanik klavye',       q:'mekanik klavye RGB'},
+  {em:'\u{1F373}',label:'Dokum tava',              q:'dokum tava 28cm'},
+  {em:'\u{1F3A7}',label:'Kablosuz kulaklik',       q:'kablosuz bluetooth kulaklik ANC'},
+];
+
+// ─── STATE ───────────────────────────────────────────────
+var sites = loadSites();
+var activeCat = 'hepsi';
+var isListening = false;
+var recognition = null;
+var pendingImage = null;
+var isSending = false;
+var apiOnline = false;
+
+// ─── PERSISTENCE ─────────────────────────────────────────
+function loadSites(){
+  try{
+    var saved=JSON.parse(localStorage.getItem('bs_sites')||'null');
+    if(saved){var m={};saved.forEach(function(s){m[s.id]=s.on;});return SITE_DB.map(function(s){return Object.assign({},s,{on:s.id in m?m[s.id]:s.on});});}
+  }catch(e){}
+  return SITE_DB.map(function(s){return Object.assign({},s);});
+}
+function saveSites(){localStorage.setItem('bs_sites',JSON.stringify(sites.map(function(s){return {id:s.id,on:s.on};})));}
+
+// ─── API HEALTH ───────────────────────────────────────────
+async function checkAPI(){
+  try{
+    var r=await fetch(API_URL+'/',{signal:AbortSignal.timeout(4000)});
+    apiOnline=r.ok;
+  }catch(e){apiOnline=false;}
+  var dot=document.getElementById('apiDot');
+  var lbl=document.getElementById('apiLabel');
+  if(apiOnline){dot.className='api-dot ok';lbl.textContent='API Bagli';}
+  else{dot.className='api-dot err';lbl.textContent='API Cevrimdisi';}
+}
+
+// ─── SIDEBAR ─────────────────────────────────────────────
+function renderSidebar(){
+  var te=document.getElementById('catTabs'); te.innerHTML='';
+  CATS.forEach(function(c){
+    var el=document.createElement('div');
+    el.className='cat-tab'+(c.id===activeCat?' active':'');
+    el.textContent=c.label;
+    el.onclick=function(){activeCat=c.id;renderSidebar();};
+    te.appendChild(el);
+  });
+  var le=document.getElementById('siteList'); le.innerHTML='';
+  (activeCat==='hepsi'?sites:sites.filter(function(s){return s.cat===activeCat;})).forEach(function(s){
+    var el=document.createElement('div');
+    el.className='site-row'+(s.on?' on':'');
+    el.innerHTML='<div class="site-check">'+(s.on?'&#10003;':'')+'</div><div class="site-em">'+s.em+'</div><div class="site-info"><div class="site-nm">'+s.name+'</div><div class="site-desc">'+s.desc+'</div></div>';
+    el.onclick=function(){s.on=!s.on;saveSites();renderSidebar();};
+    le.appendChild(el);
+  });
+}
+function selectAllSites(){sites.forEach(function(s){s.on=true;});saveSites();renderSidebar();}
+function deselectAllSites(){sites.forEach(function(s){s.on=false;});saveSites();renderSidebar();}
+
+// ─── WELCOME ─────────────────────────────────────────────
+function renderWelcome(){
+  var wc=document.getElementById('welcomeCats');
+  EXAMPLES.slice(0,6).forEach(function(ex){
+    var el=document.createElement('div');el.className='wcat';
+    el.textContent=ex.em+' '+ex.label;el.onclick=function(){quickSearch(ex.q);};wc.appendChild(el);
+  });
+  var cr=document.getElementById('chipRow');
+  EXAMPLES.forEach(function(ex){
+    var el=document.createElement('div');el.className='chip';
+    el.textContent=ex.em+' '+ex.label;el.onclick=function(){quickSearch(ex.q);};cr.appendChild(el);
+  });
+}
+
+// ─── IMAGE HANDLING ───────────────────────────────────────
+function triggerFile(){document.getElementById('fileInput').click();}
+function onFileSelect(e){var f=e.target.files[0];if(f)setImage(f);e.target.value='';}
+function setImage(file){
+  if(!file.type.startsWith('image/')){alert('Lutfen bir gorsel dosyasi secin.');return;}
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    pendingImage={file:file,dataUrl:ev.target.result};
+    document.getElementById('imgThumb').src=ev.target.result;
+    document.getElementById('imgPreviewStrip').classList.add('show');
+    document.getElementById('inputWrap').classList.add('has-img');
+    document.getElementById('chatInput').placeholder='Opsiyonel: fiyat veya ozellik ekle ("300 TL alti", "siyah renk"...)';
+  };
+  reader.readAsDataURL(file);
+}
+function clearImage(){
+  pendingImage=null;
+  document.getElementById('imgPreviewStrip').classList.remove('show');
+  document.getElementById('inputWrap').classList.remove('has-img');
+  document.getElementById('chatInput').placeholder='Ne ariyorsun? Yaz, soyle veya fotograf at...';
+}
+
+// ─── PRODUCT CARD BUILDER ─────────────────────────────────
+function buildProductCards(products, query){
+  if(!products||products.length===0){
+    return '<div class="product-section"><div class="no-results">Urun bulunamadi. Farkli bir arama deneyin.</div></div>';
+  }
+  var cards=products.map(function(p){
+    var imgHtml=p.thumbnail
+      ?'<img class="p-card-img" src="'+esc(p.thumbnail)+'" alt="'+esc(p.title)+'" loading="lazy" onerror="this.parentElement.innerHTML=\'<div class=&quot;p-card-img-placeholder&quot;>🛍️</div>\'">'
+      :'<div class="p-card-img-placeholder">\u{1F6CD}</div>';
+    var priceHtml=p.price
+      ?'<div class="p-card-price">'+esc(p.price)+'</div>'
+      :'<div class="p-card-price no-price">Fiyat belirtilmemis</div>';
+    var link=p.link||'#';
+    return '<a class="p-card" href="'+esc(link)+'" target="_blank" rel="noopener noreferrer">'+
+      '<div class="p-card-img-wrap">'+imgHtml+'</div>'+
+      '<div class="p-card-body">'+
+        '<div class="p-card-source">'+esc(p.source||'')+'</div>'+
+        '<div class="p-card-title">'+esc(p.title)+'</div>'+
+        priceHtml+
+        '<div class="p-card-btn">Satin Al &rarr;</div>'+
+      '</div></a>';
+  }).join('');
+  return '<div class="product-section">'+
+    '<div class="result-label">'+products.length+' urun bulundu</div>'+
+    '<div class="product-grid">'+cards+'</div>'+
+    '</div>';
+}
+
+// ─── SKELETON ────────────────────────────────────────────
+function buildSkeleton(count){
+  count=count||8;
+  var cards='';
+  for(var i=0;i<count;i++){
+    cards+='<div class="sk-card">'+
+      '<div class="sk-img"></div>'+
+      '<div class="sk-body">'+
+        '<div class="sk-line w55"></div>'+
+        '<div class="sk-line w80"></div>'+
+        '<div class="sk-line w80" style="margin-top:0"></div>'+
+        '<div class="sk-line w35"></div>'+
+        '<div class="sk-line btn"></div>'+
+      '</div></div>';
+  }
+  return '<div class="skeleton-grid">'+cards+'</div>';
+}
+
+// ─── FALLBACK LINK CARDS ──────────────────────────────────
+var __vfns=[];
+function openGoogleLens(file){
+  try{var form=document.createElement('form');form.method='POST';form.action='https://lens.google.com/v3/upload?hl=tr&re=df&st='+Date.now()+'&ep=gisbubb';form.enctype='multipart/form-data';form.target='_blank';form.style.display='none';var inp=document.createElement('input');inp.type='file';inp.name='encoded_image';var dt=new DataTransfer();dt.items.add(file);inp.files=dt.files;form.appendChild(inp);document.body.appendChild(form);form.submit();setTimeout(function(){document.body.removeChild(form);},1000);}catch(e){window.open('https://lens.google.com/','_blank');}
+}
+function openYandex(file){
+  try{var form=document.createElement('form');form.method='POST';form.action='https://yandex.com/images/search';form.enctype='multipart/form-data';form.target='_blank';form.style.display='none';var rpt=document.createElement('input');rpt.type='hidden';rpt.name='rpt';rpt.value='imageview';form.appendChild(rpt);var inp=document.createElement('input');inp.type='file';inp.name='upfile';var dt=new DataTransfer();dt.items.add(file);inp.files=dt.files;form.appendChild(inp);document.body.appendChild(form);form.submit();setTimeout(function(){document.body.removeChild(form);},1000);}catch(e){window.open('https://yandex.com/images/','_blank');}
+}
+function openBing(file){
+  try{var form=document.createElement('form');form.method='POST';form.action='https://www.bing.com/images/search?view=detailv2&iss=sbi&FORM=SBIVSP';form.enctype='multipart/form-data';form.target='_blank';form.style.display='none';var inp=document.createElement('input');inp.type='file';inp.name='imageBin';var dt=new DataTransfer();dt.items.add(file);inp.files=dt.files;form.appendChild(inp);document.body.appendChild(form);form.submit();setTimeout(function(){document.body.removeChild(form);},1000);}catch(e){window.open('https://www.bing.com/visualsearch','_blank');}
+}
+function buildVisualFallback(file, textQuery){
+  var q=textQuery?cleanQ(textQuery):'benzer urun';
+  __vfns=[function(){openGoogleLens(file);},function(){openYandex(file);},function(){openBing(file);},function(){window.open('https://www.pinterest.com/search/pins/?q='+encodeURIComponent(q),'_blank');}];
+  var engines=[
+    {em:'\u{1F50D}',nm:'Google Lens',    badge:'Gorsel AI'},
+    {em:'\u{1F7E1}',nm:'Yandex Gorsel', badge:'Gorsel'},
+    {em:'\u{1F535}',nm:'Bing Gorsel',   badge:'Microsoft AI'},
+    {em:'\u{1F4CC}',nm:'Pinterest',     badge:'Ilham'},
+  ];
+  var vCards=engines.map(function(e,i){
+    return '<div class="r-card visual" onclick="__vfns['+i+']()" style="cursor:pointer">'+
+      '<div class="r-card-head"><span class="em">'+e.em+'</span><span class="nm">'+e.nm+'</span><span class="badge">'+e.badge+'</span></div>'+
+      '<div class="r-card-body"><div class="r-card-title">Gorselini yukleyip benzer urunleri bul</div>'+
+      '<div class="r-card-btn">Gorsel Ara</div></div></div>';
+  }).join('');
+  return '<div class="result-wrap"><span class="vtag">Gorsel Arama (Fallback)</span>'+
+    '<div class="vsearch-header"><span class="icon">\u{1F5BC}</span>'+
+    '<div><div style="font-weight:700;font-size:13px">API bagli degil — manuel gorsel arama</div>'+
+    '<div style="font-size:11px;color:var(--text2)">Asagidaki motorlara tikla, gorsel otomatik yuklenecek.</div></div></div>'+
+    '<div class="result-grid">'+vCards+'</div></div>';
+}
+
+function buildTextFallback(rawQ){
+  var q=cleanQ(rawQ);
+  var sel=sites.filter(function(s){return s.on;});
+  if(sel.length===0){
+    var gs=[
+      {em:'\u{1F6CD}',nm:'Google Alisveris',badge:'En genis',url:'https://www.google.com/search?tbm=shop&q='+encodeURIComponent(q)+'&hl=tr'},
+      {em:'⚖️',nm:'Akakce',badge:'Karsilastir',url:'https://www.akakce.com/arama/?q='+encodeURIComponent(q)},
+      {em:'\u{1F4A1}',nm:'Cimri',badge:'En ucuz',url:'https://www.cimri.com/arama?q='+encodeURIComponent(q)},
+    ];
+    var cards=gs.map(function(s){return '<a class="r-card general" href="'+s.url+'" target="_blank" rel="noopener"><div class="r-card-head"><span class="em">'+s.em+'</span><span class="nm">'+s.nm+'</span><span class="badge">'+s.badge+'</span></div><div class="r-card-body"><div class="r-card-title">'+esc(q)+'</div><div class="r-card-btn">Gor</div></div></a>';}).join('');
+    return '<div class="result-wrap"><div class="result-label">Genel Tarama (API yok)</div><div class="result-grid">'+cards+'</div></div>';
+  }
+  var cards2=sel.map(function(s){var url=s.url.replace('{q}',encodeURIComponent(q));return '<a class="r-card" href="'+url+'" target="_blank" rel="noopener"><div class="r-card-head"><span class="em">'+s.em+'</span><span class="nm">'+s.name+'</span><span class="badge">Arama</span></div><div class="r-card-body"><div class="r-card-title">'+esc(q)+'</div><div class="r-card-btn">Sonuclari Gor</div></div></a>';}).join('');
+  return '<div class="result-wrap"><div class="result-label">'+sel.length+' sitede arama (API yok)</div><div class="result-grid">'+cards2+'</div></div>';
+}
+
+// ─── COMMAND PARSER ───────────────────────────────────────
+function detectCommand(text){
+  var t=text.toLowerCase().trim();
+  var isAll=/\b(tum|hepsi|hepsini|tumunu)\b/i.test(t);
+  var isAdd=/\b(ekle|ac|sec|aktif|kullan|dahil)\b/i.test(t);
+  var isRem=/\b(kaldir|cikar|cikart|kapat|devre)\b/i.test(t);
+  if(isAll){if(isAdd)return{type:'allOn'};if(isRem)return{type:'allOff'};}
+  if(isAdd||isRem){
+    var matched=sites.filter(function(s){return t.includes(s.name.toLowerCase())||t.includes(s.id.toLowerCase());});
+    if(matched.length>0)return{type:isAdd?'siteOn':'siteOff',sites:matched};
+  }
+  if(/\b(genel|internette|hepsinde ara|tum internette|genel ara)\b/i.test(t))return{type:'generalSearch',q:cleanQ(t)};
+  return null;
+}
+function cleanQ(text){
+  return text.replace(/\b(ariyorum|ara|aramak|bulmak|bul|bana|lutfen|acaba|internette|genel|sirala|oner|ver|goster|genel ara|tarama yap|benzer|benzeri|gibi|olan)\b/gi,' ').replace(/\s+/g,' ').trim();
+}
+function detectPrice(text){
+  var m=text.match(/(\d[\d.,]*)\s*(tl|₺|lira)/i);
+  if(!m)return null;
+  var dir=/alti|altinda|asagi|en fazla|max/i.test(text)?'max':/ustu|yukari|en az|min/i.test(text)?'min':null;
+  return{val:m[1],dir:dir};
+}
+function handleSyncCommand(cmd, text){
+  if(cmd.type==='allOn'){selectAllSites();addMsg('bot','Tum <b>'+sites.length+' site</b> aktiflestirildi!');return;}
+  if(cmd.type==='allOff'){deselectAllSites();addMsg('bot','Tum siteler kaldirildi.');return;}
+  if(cmd.type==='siteOn'){cmd.sites.forEach(function(s){s.on=true;});saveSites();renderSidebar();addMsg('bot',cmd.sites.map(function(s){return'<b>'+s.name+'</b>';}).join(', ')+' eklendi!');return;}
+  if(cmd.type==='siteOff'){cmd.sites.forEach(function(s){s.on=false;});saveSites();renderSidebar();addMsg('bot',cmd.sites.map(function(s){return'<b>'+s.name+'</b>';}).join(', ')+' kaldirildi.');return;}
+  if(cmd.type==='generalSearch'){
+    var q=cleanQ(text);
+    addSkeletonMsg(q);
+    doSearch(q);
+    return;
+  }
+}
+
+// ─── CHAT HELPERS ─────────────────────────────────────────
+function removeWelcome(){var w=document.getElementById('welcomeBox');if(w)w.remove();}
+function scrollDown(){var el=document.getElementById('chatScroll');el.scrollTop=el.scrollHeight;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function addMsg(role, html, wide){
+  removeWelcome();
+  var el=document.createElement('div');el.className='msg '+role;
+  var wClass=wide?' wide':'';
+  el.innerHTML='<div class="av '+role+'">'+(role==='bot'?'\u{1F50D}':'\u{1F464}')+'</div><div class="bbl '+role+wClass+'">'+html+'</div>';
+  document.getElementById('chatScroll').appendChild(el);scrollDown();
+  return el;
+}
+function addUserImgMsg(dataUrl,text){
+  removeWelcome();
+  var el=document.createElement('div');el.className='msg user';
+  var imgH='<img class="bbl-img" src="'+dataUrl+'" alt="Gorsel">';
+  var txtH=text?'<div>'+esc(text)+'</div>':'';
+  el.innerHTML='<div class="av user">\u{1F464}</div><div class="bbl user">'+imgH+txtH+'</div>';
+  document.getElementById('chatScroll').appendChild(el);scrollDown();
+}
+
+var _skeletonEl=null;
+function addSkeletonMsg(query){
+  removeWelcome();
+  var el=document.createElement('div');el.className='msg bot';el.id='_skel';
+  var intro=query?'"<b>'+esc(query)+'</b>" aranıyor...<br>':'Gorsel AI ile analiz ediliyor...<br>';
+  el.innerHTML='<div class="av bot">\u{1F50D}</div><div class="bbl bot wide">'+intro+buildSkeleton(8)+'</div>';
+  document.getElementById('chatScroll').appendChild(el);scrollDown();
+  _skeletonEl=el;
+}
+function removeSkeleton(){if(_skeletonEl){_skeletonEl.remove();_skeletonEl=null;}var e=document.getElementById('_skel');if(e)e.remove();}
+
+function setSendingState(on){
+  isSending=on;
+  var btn=document.getElementById('sendBtn');
+  if(btn)btn.disabled=on;
+}
+
+// ─── SEARCH API CALL ──────────────────────────────────────
+async function doSearch(q){
+  try{
+    var r=await fetch(API_URL+'/search?q='+encodeURIComponent(q),{signal:AbortSignal.timeout(20000)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var data=await r.json();
+    removeSkeleton();
+    var price=detectPrice(q);var pTag=price?'<span class="ftag">'+price.val+' TL '+(price.dir==='max'?'alti':price.dir==='min'?'ustu':'')+'</span>':'';
+    var intro=pTag+'"<b>'+esc(data.query)+'</b>" — Google Shopping\'dan <b>'+data.count+'</b> urun:<br>';
+    addMsg('bot',intro+buildProductCards(data.products, data.query),true);
+  }catch(e){
+    removeSkeleton();
+    addMsg('bot','API bagli degil. Sitelere link olarak yonlendiriyorum:<br>'+buildTextFallback(q),true);
+  }finally{setSendingState(false);}
+}
+
+async function doVisualSearch(file, text){
+  try{
+    var formData=new FormData();
+    formData.append('image',file);
+    if(text)formData.append('text',text);
+    var r=await fetch(API_URL+'/visual-search',{method:'POST',body:formData,signal:AbortSignal.timeout(30000)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    var data=await r.json();
+    removeSkeleton();
+    var intro='\u{1F916} AI tanimladi: <b>'+esc(data.identified)+'</b> — '+data.count+' urun bulundu:<br>';
+    addMsg('bot',intro+buildProductCards(data.products,data.query),true);
+  }catch(e){
+    removeSkeleton();
+    addMsg('bot','Gorsel AI hatasi — manuel gorsel arama motorlari:<br>'+buildVisualFallback(file,text),true);
+  }finally{setSendingState(false);}
+}
+
+// ─── SEND ─────────────────────────────────────────────────
+function send(){
+  if(isSending)return;
+  var inp=document.getElementById('chatInput');
+  var text=inp.value.trim();
+  var img=pendingImage;
+  if(!text&&!img)return;
+  inp.value='';resizeTA(inp);
+  setSendingState(true);
+
+  if(img){
+    addUserImgMsg(img.dataUrl,text);
+    var savedFile=img.file;
+    clearImage();
+    addSkeletonMsg('');
+    doVisualSearch(savedFile,text);
+    return;
+  }
+
+  addMsg('user',esc(text));
+  var cmd=detectCommand(text);
+  if(cmd&&cmd.type!=='generalSearch'){handleSyncCommand(cmd,text);setSendingState(false);return;}
+
+  var q=cmd&&cmd.q?cmd.q:cleanQ(text);
+  addSkeletonMsg(q);
+  doSearch(q);
+}
+
+function quickSearch(q){document.getElementById('chatInput').value=q;send();}
+function onKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+function resizeTA(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,105)+'px';}
+
+// ─── DRAG & DROP ──────────────────────────────────────────
+var mainArea=document.getElementById('mainArea');
+mainArea.addEventListener('dragover',function(e){e.preventDefault();document.getElementById('dragOverlay').classList.add('show');});
+mainArea.addEventListener('dragleave',function(e){if(!mainArea.contains(e.relatedTarget))document.getElementById('dragOverlay').classList.remove('show');});
+mainArea.addEventListener('drop',function(e){
+  e.preventDefault();document.getElementById('dragOverlay').classList.remove('show');
+  var f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))setImage(f);
+});
+
+// ─── PASTE ────────────────────────────────────────────────
+document.addEventListener('paste',function(e){
+  var items=e.clipboardData&&e.clipboardData.items;if(!items)return;
+  for(var i=0;i<items.length;i++){
+    if(items[i].type.startsWith('image/')){var f=items[i].getAsFile();if(f){setImage(f);e.preventDefault();break;}}
+  }
+});
+
+// ─── VOICE ────────────────────────────────────────────────
+function toggleVoice(){if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){alert('Sesli komut icin Google Chrome kullanin.');return;}isListening?stopVoice():startVoice();}
+function startVoice(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();recognition.lang='tr-TR';recognition.continuous=false;recognition.interimResults=true;
+  recognition.onstart=function(){isListening=true;document.getElementById('micBtn').classList.add('on');document.getElementById('voiceBar').classList.add('show');};
+  recognition.onresult=function(e){var fin='',inter='';for(var i=0;i<e.results.length;i++){if(e.results[i].isFinal)fin+=e.results[i][0].transcript;else inter+=e.results[i][0].transcript;}document.getElementById('chatInput').value=fin||inter;resizeTA(document.getElementById('chatInput'));};
+  recognition.onend=function(){stopVoice();var v=document.getElementById('chatInput').value.trim();if(v)send();};
+  recognition.onerror=function(e){stopVoice();if(e.error!=='no-speech')alert('Ses hatasi: '+e.error);};
+  recognition.start();
+}
+function stopVoice(){isListening=false;if(recognition){try{recognition.stop();}catch(e){}}document.getElementById('micBtn').classList.remove('on');document.getElementById('voiceBar').classList.remove('show');}
+
+// ─── THEME ────────────────────────────────────────────────
+function toggleTheme(){document.body.classList.toggle('light');localStorage.setItem('bs_theme',document.body.classList.contains('light')?'light':'dark');}
+
+// ─── INIT ─────────────────────────────────────────────────
+(function(){
+  if(localStorage.getItem('bs_theme')==='light')document.body.classList.add('light');
+  renderSidebar();renderWelcome();
+  checkAPI();
+  setTimeout(function(){
+    addMsg('bot','Merhaba! Ben <b>BuyScout</b><br><br>'+
+      'Gercek urun fiyatlari ve gorselleriyle alisveris yapmanı kolaylastırıyorum.<br><br>'+
+      '<b>\u{1F5BC} Gorsel Arama — AI Destekli</b><br>'+
+      '• Urunun fotografini surukle birak veya 📎 ile ekle<br>'+
+      '• GPT-4o urununu tanimlayip Google Shopping\'dan sonuclar getirir<br>'+
+      '• Ctrl+V ile yapistir da calisir<br><br>'+
+      '<b>\u{1F4AC} Yazarak / sesli:</b><br>'+
+      '• Gercek fiyat, gorsel ve satın al linki olan kartlar gosterilir<br>'+
+      '• <i>"Trendyol ekle"</i>, <i>"Genel ara"</i> komutlari calisir<br><br>'+
+      'Ne ariyorsun? \u{1F6D2}');
+  },300);
+})();
+</script>
+</body>
+</html>
